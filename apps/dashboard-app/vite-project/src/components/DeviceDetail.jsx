@@ -1,26 +1,67 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import LatencyChart from "./LatencyChart";
 import TrafficChart from "./TrafficChart";
 import { socket } from "../services/socket";
-import DeviceIcon from "./DeviceIcon";
+import { ICON_LIBRARY, DefaultIcon } from "../utils/iconLibrary";
 import StatusBadge from "./StatusBadge";
 import { monApi } from "../services/apiService";
+import "../styles/device.css";
 
-/* ================= DEVICE DETAIL COMPONENT ================= */
+/* ================= HELPER ================= */
+
+function formatUptime(value) {
+  if (!value) return "N/A";
+
+  let totalSeconds = Math.floor(Number(value) / 100);
+
+  const days = Math.floor(totalSeconds / 86400);
+  totalSeconds %= 86400;
+
+  const hours = Math.floor(totalSeconds / 3600);
+  totalSeconds %= 3600;
+
+  const minutes = Math.floor(totalSeconds / 60);
+
+  return `${days}d ${hours}h ${minutes}m`;
+}
+
+function formatSpeed(bps) {
+  if (!bps) return "0 Mbps";
+
+  const mbps = bps / 1_000_000;
+
+  if (mbps >= 1000) {
+    return `${(mbps / 1000).toFixed(2)} Gbps`;
+  }
+
+  if (mbps < 1) {
+    return `${mbps.toFixed(3)} Mbps`;
+  }
+
+  return `${mbps.toFixed(2)} Mbps`;
+}
+
+/* ================= COMPONENT ================= */
 
 export default function DeviceDetail({ device, onClose }) {
+  const navigate = useNavigate();
+
   const [live, setLive] = useState(device);
   const [trafficHistory, setTrafficHistory] = useState([]);
   const [latencyHistory, setLatencyHistory] = useState([]);
   const [logs, setLogs] = useState([]);
+  const IconComponent =
+  ICON_LIBRARY[live.icon_key] || DefaultIcon;
 
-  /* ================= FETCH HISTORY + LOG ================= */
+  /* ================= FETCH HISTORY ================= */
+
   useEffect(() => {
     if (!device) return;
 
     setLive(device);
 
-    const loadHistoryAndLogs = async () => {
+    const loadData = async () => {
       try {
         const history = await monApi.get(`/devices/${device.id}/history`);
 
@@ -35,8 +76,7 @@ export default function DeviceDetail({ device, onClose }) {
 
         setTrafficHistory(normalized);
         setLatencyHistory(normalized);
-      } catch (err) {
-        console.error("FETCH HISTORY ERROR:", err);
+      } catch {
         setTrafficHistory([]);
         setLatencyHistory([]);
       }
@@ -44,16 +84,16 @@ export default function DeviceDetail({ device, onClose }) {
       try {
         const logData = await monApi.get(`/devices/${device.id}/logs`);
         setLogs(Array.isArray(logData) ? logData : []);
-      } catch (err) {
-        console.error("FETCH LOG ERROR:", err);
+      } catch {
         setLogs([]);
       }
     };
 
-    loadHistoryAndLogs();
+    loadData();
   }, [device]);
 
-  /* ================= REALTIME SOCKET ================= */
+  /* ================= REALTIME ================= */
+
   useEffect(() => {
     if (!device) return;
 
@@ -76,7 +116,6 @@ export default function DeviceDetail({ device, onClose }) {
         latency: payload.metric.latency,
         uptime: payload.uptime,
         iface_speed: payload.ifaceSpeed,
-        type: payload.type ?? prev.type,
       }));
     };
 
@@ -87,38 +126,42 @@ export default function DeviceDetail({ device, onClose }) {
   if (!device) return null;
 
   return (
-   <div className="device-detail-overlay" onClick={onClose}>
-      <div
-        className="device-detail"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className="device-detail-overlay" onClick={onClose}>
+      <div className="device-detail" onClick={(e) => e.stopPropagation()}>
+        
         {/* HEADER */}
         <div className="device-detail-header">
           <div className="device-title">
-            <DeviceIcon type={live.type} />
-            <h3>{live.name}</h3>
-            <StatusBadge status={live.status} />
+  <div className="device-icon">
+    <IconComponent size={22} strokeWidth={2.5} />
+  </div>
+
+  <h3>{live.name}</h3>
+
+  <StatusBadge status={live.status} />
+</div>
+
+          <div className="device-actions">
+            <button
+              className="secondary"
+              onClick={() => {
+                onClose();
+                navigate(`/devices?edit=${live.id}`);
+              }}
+            >
+              Edit
+            </button>
+            <button onClick={onClose}>✕</button>
           </div>
-          <button onClick={onClose}>✕</button>
         </div>
 
         {/* BODY */}
         <div className="device-detail-body">
           <div className="device-info">
             <Info label="IP" value={live.ip} />
-            <Info label="Status" value={live.status} />
-            <Info
-              label="Latency"
-              value={`${live.latency ?? "-"} ms`}
-            />
-            <Info
-              label="Uptime"
-              value={live.uptime ?? "N/A"}
-            />
-            <Info
-              label="Interface"
-              value={live.iface_speed ?? "N/A"}
-            />
+            <Info label="Latency" value={`${live.latency ?? "-"} ms`} />
+            <Info label="Uptime" value={formatUptime(live.uptime)} />
+            <Info label="Interface" value={formatSpeed(live.iface_speed)} />
           </div>
 
           <div className="device-charts">
@@ -133,20 +176,16 @@ export default function DeviceDetail({ device, onClose }) {
         </div>
 
         {/* LOG */}
-        <div>
+        <div className="device-log-section">
           <b>Activity Log</b>
           <div className="device-log">
             {logs.length === 0 && (
-              <span className="text-muted">
-                Belum ada log
-              </span>
+              <span className="text-muted">Belum ada log</span>
             )}
             {logs.map((l, i) => (
               <div key={i} className="log-row">
                 <span>
-                  {new Date(
-                    Number(l.created_at)
-                  ).toLocaleTimeString()}
+                  {new Date(Number(l.created_at)).toLocaleTimeString()}
                 </span>
                 <span>{l.status}</span>
               </div>
@@ -167,8 +206,8 @@ export default function DeviceDetail({ device, onClose }) {
 function Info({ label, value }) {
   return (
     <div className="info-row">
-      <b>{label}</b>
-      <span>{value}</span>
+      <span className="info-label">{label}</span>
+      <span className="info-value">{value}</span>
     </div>
   );
 }

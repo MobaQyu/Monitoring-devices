@@ -12,10 +12,10 @@ function saveMetric(deviceId, latency, inBps, outBps) {
 function getMetricHistory(deviceId, limit = 120) {
   return db.query(
     `SELECT
-        created_at,
+        created_at AS time,
         latency,
-        in_bps,
-        out_bps
+        in_bps AS "in",
+        out_bps AS "out"
      FROM metrics
      WHERE device_id = ?
      ORDER BY created_at ASC

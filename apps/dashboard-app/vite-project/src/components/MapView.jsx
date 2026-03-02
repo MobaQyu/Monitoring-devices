@@ -130,7 +130,7 @@ export default function MapView({ devices, onSelectDevice }) {
 
             <div className="popup-row">
               <span>IP</span>
-              <span>{d.ip_address || "-"}</span>
+              <span>{d.ip || "-"}</span>
             </div>
 
             <div className="popup-row">

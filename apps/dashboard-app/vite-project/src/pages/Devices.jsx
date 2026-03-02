@@ -166,6 +166,23 @@ export default function Devices() {
   monitorSocket.off("device:update", runtimeUpdateHandler);
 };
 }, []);
+
+  useEffect(() => {
+  const id = localStorage.getItem("openDeviceId");
+
+  if (id && devicesRaw.length > 0) {
+    const found = devicesRaw.find(
+      (d) => d.id === Number(id)
+    );
+
+    if (found) {
+      setSelectedDevice(found);
+    }
+
+    localStorage.removeItem("openDeviceId");
+  }
+}, [devicesRaw]);
+
   /* ================= DELETE ================= */
 
   const handleDelete = async (id) => {

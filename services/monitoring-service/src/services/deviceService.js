@@ -302,31 +302,29 @@ async function updateDeviceRuntime(id, runtime) {
   await db.query(
     `
     UPDATE devices
-    SET 
-      status = ?,
-      latency = ?,
-      uptime = ?,
-      iface_speed = ?,
-      last_in_octets = ?,
-      last_out_octets = ?,
-      last_check_time = ?,
+    SET
+      status = COALESCE(?, status),
+      latency = COALESCE(?, latency),
+      uptime = COALESCE(?, uptime),
+      iface_speed = COALESCE(?, iface_speed),
+      last_in_octets = COALESCE(?, last_in_octets),
+      last_out_octets = COALESCE(?, last_out_octets),
+      last_check_time = COALESCE(?, last_check_time),
       updated_at = ?
     WHERE id = ?
     `,
     [
-      runtime.status ?? null,
-      runtime.latency ?? null,
-      runtime.uptime ?? null,
-      runtime.iface_speed ?? null,
-      runtime.last_in_octets ?? null,
-      runtime.last_out_octets ?? null,
-      runtime.last_check_time ?? null,
+      runtime.status,
+      runtime.latency,
+      runtime.uptime,
+      runtime.iface_speed,
+      runtime.last_in_octets,
+      runtime.last_out_octets,
+      runtime.last_check_time,
       Date.now(),
       id,
     ]
   );
-
-  return runtime.status;
 }
 
 /* =========================================================
@@ -336,6 +334,7 @@ async function getAllDevicesRaw() {
   return await db.query(`
     SELECT 
       id,
+      name,
       ip,
       snmp,
       iface_index,

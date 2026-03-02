@@ -448,3 +448,44 @@
 .device-card.offline {
   opacity: 0.7;
 }
+.device-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.device-title h3 {
+  margin: 0;
+}
+
+.device-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+}
+
+.info-label {
+  color: var(--text-secondary);
+}
+
+.info-value {
+  font-weight: 600;
+}
+.device-icon-wrapper {
+  background: var(--bg-muted);
+  padding: 10px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.device-title .device-icon {
+  background: var(--bg-muted);
+  padding: 10px;
+  border-radius: 12px;
+}

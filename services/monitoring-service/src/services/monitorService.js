@@ -27,7 +27,7 @@ async function checkDevices(io) {
               ? ["-n", "3"]
               : ["-c", "3"],
         });
-        console.log("PING RESULT:", d.ip, res.packetLoss, res.alive, res.time);
+        // console.log("PING RESULT:", d.ip, res.packetLoss, res.alive, res.time);
         const packetLoss = Number(res.packetLoss);
         let latency = Number(res.time);
         let status = "online";
@@ -61,33 +61,51 @@ async function checkDevices(io) {
         let outBps = 0;
         let uptime = null;
         let ifaceSpeed = null;
-
+//         console.log("SNMP CHECK:", {
+//   id: d.id,
+//   snmp: d.snmp,
+//   iface: d.iface_index,
+//   status
+// });
         if (status !== "offline" && d.snmp && d.iface_index) {
-          uptime = await getUptime(d.ip);
+          console.log("===== SNMP START =====");
+          console.log("DEVICE:", d.name);
+          console.log("IP:", d.ip);
+          console.log("IFACE INDEX:", d.iface_index);
 
+          uptime = await getUptime(d.ip);
+          console.log("UPTIME RAW:", uptime);
           ifaceSpeed = await getInterfaceSpeed(
             d.ip,
             d.iface_index
           );
-
+          console.log("INTERFACE SPEED (bps):", ifaceSpeed);
           const octets = await getInterfaceOctets(
             d.ip,
             d.iface_index
           );
+          let diff = null;
 
-          if (octets && d.last_check_time) {
-            const diff = (now - d.last_check_time) / 1000;
-            if (diff > 0) {
-              inBps =
-                ((octets.inOctets - (d.last_in_octets || 0)) * 8) /
-                diff;
+if (octets && d.last_in_octets && d.last_check_time) {
+  diff = (now - d.last_check_time) / 1000;
 
-              outBps =
-                ((octets.outOctets - (d.last_out_octets || 0)) * 8) /
-                diff;
-            }
-          }
+  if (diff > 0) {
+    const rawIn = octets.inOctets - d.last_in_octets;
+    const rawOut = octets.outOctets - d.last_out_octets;
 
+    if (rawIn >= 0) {
+      inBps = (rawIn * 8) / diff;
+    }
+
+    if (rawOut >= 0) {
+      outBps = (rawOut * 8) / diff;
+    }
+  }
+}
+
+console.log("TIME DIFF:", diff);
+console.log("IN BPS:", inBps);
+console.log("OUT BPS:", outBps);
           if (ifaceSpeed && ifaceSpeed > 0) {
             const usagePercent =
               (Math.max(inBps, outBps) / ifaceSpeed) * 100;
@@ -101,7 +119,11 @@ async function checkDevices(io) {
               status = "warning";
             }
           }
-
+console.log("FINAL STATUS AFTER SNMP:", status);
+console.log("TIME DIFF:", diff);
+console.log("LAST CHECK:", d.last_check_time);
+console.log("NOW:", now);
+console.log("===== SNMP END =====\n");
           await updateDeviceRuntime(d.id, {
             last_in_octets: octets?.inOctets ?? null,
             last_out_octets: octets?.outOctets ?? null,
@@ -133,9 +155,14 @@ async function checkDevices(io) {
           io.emit("device:update", {
             deviceId: d.id,
             status,
-            latency: isNaN(latency) ? null : latency,
             uptime,
             ifaceSpeed,
+            metric: {
+              time: Date.now(),
+              latency: isNaN(latency) ? 0 : latency,
+              in: inBps || 0,
+              out: outBps || 0,
+            },
           });
         }
 

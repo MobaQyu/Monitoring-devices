@@ -31,6 +31,7 @@ export default function Navbar() {
   /* ================= SOCKET ALERT ================= */
   useEffect(() => {
     const handler = (payload) => {
+      console.log("ALERT PAYLOAD:", payload);
       if (
         payload.status === "warning" ||
         payload.status === "offline" ||
@@ -48,6 +49,7 @@ export default function Navbar() {
                     ...a,
                     status: payload.status,
                     latency: payload.latency,
+                    deviceName: payload.deviceName,
                     time: Date.now(),
                   }
                 : a
@@ -58,6 +60,7 @@ export default function Navbar() {
             ...prev,
             {
               deviceId: payload.deviceId,
+              deviceName: payload.deviceName,
               status: payload.status,
               latency: payload.latency,
               time: Date.now(),
@@ -169,9 +172,17 @@ export default function Navbar() {
               <div
                 key={a.deviceId}
                 className={`dropdown-item ${a.status}`}
+                 onClick={() => {
+                  navigate("/devices");
+                  setOpen(false);
+
+                  // optional: kirim event custom untuk buka detail
+                  localStorage.setItem("openDeviceId", a.deviceId);
+                }}
+                style={{ cursor: "pointer" }}
               >
                 <div className="item-title">
-                  Device #{a.devi}
+                  {a.deviceName || `Device #${a.deviceId}`}
                 </div>
 
                 <div className="item-meta">

@@ -2,6 +2,7 @@ const snmp = require("net-snmp");
 
 function getUptime(ip, community = "public") {
   return new Promise((resolve) => {
+    console.log("TRY SNMP:", ip);
     const session = snmp.createSession(ip, community, {
       timeout: 2000
     });
