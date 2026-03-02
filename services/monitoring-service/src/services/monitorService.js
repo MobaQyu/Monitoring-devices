@@ -152,18 +152,18 @@ console.log("===== SNMP END =====\n");
 
         /* ================= SOCKET EMIT ================= */
         if (io) {
-          io.emit("device:update", {
-            deviceId: d.id,
-            status,
-            uptime,
-            ifaceSpeed,
-            metric: {
-              time: Date.now(),
-              latency: isNaN(latency) ? 0 : latency,
-              in: inBps || 0,
-              out: outBps || 0,
-            },
-          });
+        io.emit("device:update", {
+  deviceId: d.id,
+  status,
+  uptime,
+  ifaceSpeed,
+  metric: {
+    time: Date.now(),
+    latency: isNaN(latency) ? 0 : latency,
+    in: inBps,
+    out: outBps,
+  },
+});
         }
 
       } catch (err) {
