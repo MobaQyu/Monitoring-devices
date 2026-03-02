@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+/* =========================
+   RESET & BASE
+========================= */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-app);
+  color: var(--text-primary);
+  transition: background 0.2s ease, color 0.2s ease;
+  margin: 0;
+  overflow: hidden;
+}
+
+/* =========================
+   THEME VARIABLES (LIGHT)
+========================= */
+:root {
+  /* background */
+  --bg-app: #f9fafb;
+  --bg-surface: #ffffff;
+  --bg-muted: #f3f4f6;
+
+  /* text */
+  --text-primary: #111827;
+  --text-secondary: #374151;
+  --text-muted: #6b7280;
+
+  /* border */
+  --border-default: #e5e7eb;
+
+  /* accent */
+  --accent-primary: #2563eb;
+  --accent-danger: #dc2626;
+  --accent-warning: #facc15;
+  --accent-success: #16a34a;
+}
+
+/* =========================
+   THEME VARIABLES (DARK)
+========================= */
+body.dark {
+  --bg-app: #0f172a;
+  --bg-surface: #020617;
+  --bg-muted: #020617;
+
+  --text-primary: #e5e7eb;
+  --text-secondary: #cbd5f5;
+  --text-muted: #9ca3af;
+
+  --border-default: #1e293b;
+
+  --accent-primary: #3b82f6;
+  --accent-danger: #ef4444;
+  --accent-warning: #fde047;
+  --accent-success: #22c55e;
+}
+
+/* =========================
+   ANIMATIONS (TETAP)
+========================= */
+@keyframes pop {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(0,185,68,0.7); }
+  70% { box-shadow: 0 0 0 8px rgba(0,185,68,0); }
+  100% { box-shadow: 0 0 0 0 rgba(0,185,68,0); }
+}
+
+.fade-in {
+  animation: pop 0.3s ease-in-out;
+}
+
+.pulse {
+  animation: pulse 1.5s infinite;
+}
+
+/* =========================
+   GLOBAL COMPONENT STYLE
+========================= */
+.navbar {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
+}
+
+/* =========================
+   BUTTON (OPSIONAL)
+========================= */
+button {
+  background: var(--bg-muted);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+}
+.dashboard-full {
+  flex: 1;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}

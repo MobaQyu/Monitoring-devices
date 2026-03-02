@@ -1,0 +1,450 @@
+/* =====================================================
+   DEVICE THEME SYSTEM
+   Dark mode ready - variable based
+===================================================== */
+
+:root {
+  --card-bg: var(--bg-surface);
+  --card-border: var(--border-default);
+  --card-hover-shadow: rgba(0,0,0,0.08);
+
+  --icon-bg: var(--bg-muted);
+
+  --text-title: var(--text-primary);
+  --text-body: var(--text-secondary);
+  --text-muted-custom: var(--text-muted);
+
+  --topbar-bg:var(--bg-surface);
+  --topbar-inner: var(--border-default);
+  --topbar-hover: var(--border-default);
+}
+
+/* ================= DARK MODE OVERRIDE ================= */
+
+.dark {
+  --card-hover-shadow: rgba(0, 0, 0, 0.45);
+
+  --topbar-bg: var(--bg-surface);
+  --topbar-inner: var(--bg-muted);
+  --topbar-hover: var(--border-default);
+}
+/* =====================================================
+   GRID SYSTEM
+===================================================== */
+
+.devices-grid {
+  display: grid;
+  gap: 20px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+/* Responsive auto grid */
+.devices-grid.small {
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+
+.devices-grid.medium {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.devices-grid.large {
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+}
+
+/* =====================================================
+   DEVICE CARD
+===================================================== */
+
+.device-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 18px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.device-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px var(--card-hover-shadow);
+}
+.dark .device-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+/* HEADER */
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.device-icon-box {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--icon-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* TITLE */
+
+.device-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-title);
+  margin: 0;
+}
+
+/* BODY INFO */
+
+.device-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text-body);
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* TRAFFIC */
+
+.traffic-wrapper {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--card-border);
+}
+
+/* ACTIONS */
+
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  padding-top: 10px;
+  border-top: 1px solid var(--card-border);
+}
+
+.card-actions button {
+  background: var(--icon-bg);
+  border: 1px solid var(--card-border);
+  padding: 7px 9px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.card-actions button:hover {
+  background: var(--topbar-hover);
+}
+
+/* =====================================================
+   TOPBAR
+===================================================== */
+
+.devices-topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--topbar-bg);
+  padding: 14px 18px;
+  border-radius: 12px;
+}
+
+.view-toggle {
+  display: flex;
+  background: var(--topbar-inner);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.search-wrapper input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-title);
+  font-size: 14px;
+}
+
+.view-toggle button.active {
+  background: var(--accent-primary);
+  color: white;
+}
+
+/* SEARCH */
+
+.search-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: var(--topbar-inner);
+  padding: 8px 12px;
+  border-radius: 8px;
+  gap: 8px;
+  color: var(--text-muted);
+}
+
+.search-wrapper input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-title);
+  font-size: 14px;
+}
+
+/* FILTER BUTTON */
+
+.filter-btn {
+  background: var(--topbar-inner);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.filter-btn:hover {
+  background: var(--topbar-hover);
+}
+.devices-topbar {
+  border: 1px solid var(--card-border);
+}
+.devices-filter-bar {
+  display: flex;
+  gap: 20px;
+  padding: 16px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+}
+
+.filter-select {
+  padding: 8px 12px;
+  min-width: 160px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.filter-select:hover {
+  border-color: #999;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+/* ================= DEVICE PANEL (MODAL FIX) ================= */
+
+.device-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 80px; /* sesuaikan navbar */
+  z-index: 9999;
+}
+
+.device-panel {
+  width: 650px;
+  max-height: 85vh;
+  overflow-y: auto;
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+  animation: panelFade 0.2s ease;
+}
+
+.device-map {
+  height: 260px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.device-panel-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+@keyframes panelFade {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+/* ================= ADD DEVICE BUTTON ================= */
+
+.add-device-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: 0.2s ease;
+}
+
+.add-device-btn:hover {
+  opacity: 0.9;
+}
+
+/* ================= DEVICE DETAIL MODAL ================= */
+
+.device-detail-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 80px;
+  z-index: 9998;
+}
+
+/* ================= DEVICE DETAIL ================= */
+
+.device-detail {
+  width: 860px;
+  height: 690px;
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER */
+.device-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.device-detail-header h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+/* BODY GRID */
+.device-detail-body {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 14px;
+  flex: 1;
+  margin-bottom: 20px;
+}
+
+/* INFO PANEL */
+.device-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  background: var(--bg-muted);
+  border-radius: 14px;
+  font-size: 14px;
+}
+
+/* CHART AREA */
+.device-charts {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.chart-box {
+  background: var(--bg-muted);
+  padding: 18px;
+  border-radius: 14px;
+}
+
+.chart-title {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.chart-inner {
+  height: 100px;
+}
+
+/* LOG */
+.device-log {
+  margin-top: 10px;
+  max-height: 150px;
+  overflow-y: auto;
+  padding: 12px;
+  background: var(--bg-muted);
+  border-radius: 12px;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.log-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--card-border);
+}
+.device-detail > button {
+  margin-top: auto;
+}
+.device-card.warning {
+  border: 2px solid #facc15;
+}
+
+.device-card.critical {
+  border: 2px solid #ef4444;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
+}
+
+.device-card.offline {
+  opacity: 0.7;
+}
