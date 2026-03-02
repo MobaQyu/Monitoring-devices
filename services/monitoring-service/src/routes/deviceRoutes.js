@@ -6,6 +6,7 @@ const deviceService = require("../services/deviceService");
 const metricService = require("../services/metricService");
 const activityService = require("../services/activityService");
 const requirePermission = require("../middleware/requirePermission"); // Permission middleware
+const { getWeeklySummary } = require("../services/weeklySummaryService");
 
 /* ================= GET ALL DEVICES ================= */
 router.get(
@@ -120,6 +121,16 @@ router.get("/:id/logs", auth, async (req, res) => {
   } catch (err) {
     console.error("LOG ERROR:", err);
     res.status(500).json({ error: "Gagal ambil logs" });
+  }
+});
+
+// ================= WEEKLY SUMMARY =================
+router.get("/:id/weekly-summary", auth, async (req, res) => {
+  try {
+    const summary = await getWeeklySummary(req.params.id);
+    res.json(summary);
+  } catch (err) {
+    res.status(500).json({ error: "Gagal ambil weekly summary" });
   }
 });
 

@@ -6,11 +6,22 @@ const cors = require("cors");
 const { checkDevices } = require("./services/monitorService");
 const deviceRoutes = require("./routes/deviceRoutes");
 const deviceTypeRoutes = require("./routes/deviceTypeRoutes");
+const { cleanupOldData } = require("./services/cleanupService");
+const { generateHourlySummary } = require("./services/metricsSummaryService");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/api/device-types", deviceTypeRoutes);
+
+setInterval(() => {
+  cleanupOldData();
+}, 24 * 60 * 60 * 1000); // Jalankan cleanup setiap 24 jam
+
+setInterval(() => {
+  console.log("🔥 SUMMARY FUNCTION TRIGGERED");
+  generateHourlySummary();
+}, 60 * 1000);
 
 /* ===== ROUTES ===== */
 app.get("/", (_, res) => {

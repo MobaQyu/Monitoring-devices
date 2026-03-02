@@ -51,8 +51,8 @@ export default function DeviceDetail({ device, onClose }) {
   const [trafficHistory, setTrafficHistory] = useState([]);
   const [latencyHistory, setLatencyHistory] = useState([]);
   const [logs, setLogs] = useState([]);
-  const IconComponent =
-  ICON_LIBRARY[live.icon_key] || DefaultIcon;
+  const IconComponent = ICON_LIBRARY[live.icon_key] || DefaultIcon;
+  const [weekly, setWeekly] = useState(null);
 
   /* ================= FETCH HISTORY ================= */
 
@@ -87,6 +87,14 @@ export default function DeviceDetail({ device, onClose }) {
       } catch {
         setLogs([]);
       }
+      try {
+  const weeklyData = await monApi.get(
+    `/devices/${device.id}/weekly-summary`
+  );
+  setWeekly(weeklyData);
+} catch (err) {
+  setWeekly(null);
+}
     };
 
     loadData();
@@ -126,79 +134,126 @@ export default function DeviceDetail({ device, onClose }) {
   if (!device) return null;
 
   return (
-    <div className="device-detail-overlay" onClick={onClose}>
-      <div className="device-detail" onClick={(e) => e.stopPropagation()}>
-        
-        {/* HEADER */}
-        <div className="device-detail-header">
-          <div className="device-title">
-  <div className="device-icon">
-    <IconComponent size={22} strokeWidth={2.5} />
-  </div>
+  <div className="device-detail-overlay" onClick={onClose}>
+    <div className="device-detail" onClick={(e) => e.stopPropagation()}>
 
-  <h3>{live.name}</h3>
-
-  <StatusBadge status={live.status} />
-</div>
-
-          <div className="device-actions">
-            <button
-              className="secondary"
-              onClick={() => {
-                onClose();
-                navigate(`/devices?edit=${live.id}`);
-              }}
-            >
-              Edit
-            </button>
-            <button onClick={onClose}>✕</button>
+      {/* HEADER */}
+      <div className="device-detail-header">
+        <div className="device-title">
+          <div className="device-icon">
+            <IconComponent size={22} strokeWidth={2.5} />
           </div>
+          <h3>{live.name}</h3>
+          <StatusBadge status={live.status} />
         </div>
 
-        {/* BODY */}
-        <div className="device-detail-body">
-          <div className="device-info">
-            <Info label="IP" value={live.ip} />
-            <Info label="Latency" value={`${live.latency ?? "-"} ms`} />
-            <Info label="Uptime" value={formatUptime(live.uptime)} />
-            <Info label="Interface" value={formatSpeed(live.iface_speed)} />
-          </div>
-
-          <div className="device-charts">
-            <ChartBlock title="Traffic">
-              <TrafficChart data={trafficHistory} />
-            </ChartBlock>
-
-            <ChartBlock title="Latency">
-              <LatencyChart data={latencyHistory} />
-            </ChartBlock>
-          </div>
+        <div className="device-actions">
+          <button
+            className="secondary"
+            onClick={() => {
+              onClose();
+              navigate(`/devices?edit=${live.id}`);
+            }}
+          >
+            Edit
+          </button>
+          <button onClick={onClose}>✕</button>
         </div>
+      </div>
 
-        {/* LOG */}
-        <div className="device-log-section">
-          <b>Activity Log</b>
-          <div className="device-log">
-            {logs.length === 0 && (
-              <span className="text-muted">Belum ada log</span>
-            )}
-            {logs.map((l, i) => (
-              <div key={i} className="log-row">
-                <span>
-                  {new Date(Number(l.created_at)).toLocaleTimeString()}
-                </span>
-                <span>{l.status}</span>
+      {/* ================= WEEKLY SUMMARY (TOP) ================= */}
+      {weekly && (
+        <div className="summary-bar">
+          <div className="summary-header">
+            <span>Weekly Summary</span>
+            <span className={`weekly-badge ${weekly.stability}`}>
+              {weekly.stability}
+            </span>
+          </div>
+
+          <div className="summary-cards">
+            <div className="summary-card">
+              <div className="summary-label">Avg In</div>
+              <div className="summary-value">
+                {(weekly.avg_in_bps / 1000).toFixed(1)} Kbps
               </div>
-            ))}
+            </div>
+
+            <div className="summary-card">
+              <div className="summary-label">Peak In</div>
+              <div className="summary-value">
+                {(weekly.peak_in_bps / 1000).toFixed(1)} Kbps
+              </div>
+            </div>
+
+            <div className="summary-card">
+              <div className="summary-label">Avg Latency</div>
+              <div className="summary-value">
+                {weekly.avg_latency.toFixed(2)} ms
+              </div>
+            </div>
+
+            <div className="summary-card">
+              <div className="summary-label">Uptime</div>
+              <div className="summary-value">
+                {weekly.uptime_percent}%
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ================= TECH INFO ROW ================= */}
+      <div className="tech-info">
+        IP: {live.ip} |
+        Interface: {formatSpeed(live.iface_speed)} |
+        Uptime saat ini: {formatUptime(live.uptime)}
+      </div>
+
+      {/* ================= CHARTS SIDE BY SIDE ================= */}
+      <div className="charts-row">
+        <div className="chart-box">
+          <div className="chart-title">Traffic</div>
+          <div className="chart-inner">
+            <TrafficChart data={trafficHistory} />
           </div>
         </div>
 
-        <button className="primary" onClick={onClose}>
+        <div className="chart-box">
+          <div className="chart-title">Latency</div>
+          <div className="chart-inner">
+            <LatencyChart data={latencyHistory} />
+          </div>
+        </div>
+      </div>
+
+      {/* ================= LOG ================= */}
+      <div className="device-log-section">
+        <b>Activity Log</b>
+        <div className="device-log">
+          {logs.map((l, i) => (
+            <div
+              key={i}
+              className={`log-row ${l.status === "warning" ? "log-warning" : ""}`}
+            >
+              <span>
+                {new Date(Number(l.created_at)).toLocaleTimeString()}
+              </span>
+              <span>{l.status}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="close-wrapper">
+        <button className="close-btn" onClick={onClose}>
           Tutup
         </button>
       </div>
+
     </div>
-  );
+  </div>
+);
 }
 
 /* ================= SMALL COMPONENT ================= */
