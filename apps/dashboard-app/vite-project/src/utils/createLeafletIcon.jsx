@@ -12,11 +12,11 @@ export function createLeafletIcon(type, status, isCore = false) {
       ? "#facc15"
       : "#dc2626";
 
-  const isOffline = status === "offline";
+  const isCritical = status === "critical";
   const size = isCore ? 36 : 30;
   const html = renderToStaticMarkup(
     <div
-      className={isOffline ? "pulse-offline" : ""}
+      className={isCritical ? "pulse-critical" : ""}
       style={{
         width: size,
         height: size,

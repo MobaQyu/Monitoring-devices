@@ -8,12 +8,15 @@ import "./styles/device.css";
 import { ThemeProvider } from "./context/ThemeContext";
 import "react-leaflet-cluster/dist/assets/MarkerCluster.css";
 import "react-leaflet-cluster/dist/assets/MarkerCluster.Default.css";
+import { AlertProvider } from "./context/AlertContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
        <ThemeProvider>
-        <App />
+        <AlertProvider>
+          <App />
+        </AlertProvider>
       </ThemeProvider>
     </BrowserRouter>
   </React.StrictMode>

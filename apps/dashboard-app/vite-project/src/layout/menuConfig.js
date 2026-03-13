@@ -15,6 +15,12 @@ export const MENU = [
     icon: Home
   },
   {
+    label: "Network Map",
+    path: "/network-map",
+    icon: Map
+  },
+  
+  {
     label: "Devices",
     path: "/devices",
     icon: Cpu,

@@ -83,7 +83,7 @@ io.on("connection", (socket) => {
     connectedAt: Date.now()
   });
 
-  console.log(`🟢 User online: ${username}`);
+  // console.log(`🟢 User online: ${username}`);
 
   io.emit("onlineUsersUpdate", {
     total: onlineUsers.size,
@@ -97,7 +97,7 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     onlineUsers.delete (Number(userId));
-    console.log(`🔴 User offline: ${username}`);
+    // console.log(`🔴 User offline: ${username}`);
 
     io.emit("onlineUsersUpdate", {
       total: onlineUsers.size,

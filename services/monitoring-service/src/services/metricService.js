@@ -18,13 +18,45 @@ function getMetricHistory(deviceId, limit = 120) {
         out_bps AS "out"
      FROM metrics
      WHERE device_id = ?
-     ORDER BY created_at ASC
+     ORDER BY created_at DESC
      LIMIT ?`,
     [deviceId, limit]
   );
 }
 
+function getTrafficHistory() {
+  const fiveMinutesAgo = Date.now() - (5 * 60 * 1000);
+
+  return db.query(
+    `SELECT
+        (created_at / 5000) * 5000 AS time,
+        SUM(in_bps) AS "in",
+        SUM(out_bps) AS "out"
+     FROM metrics
+     WHERE created_at > ?
+     GROUP BY time
+     ORDER BY time ASC`,
+    [fiveMinutesAgo]
+  );
+}
+
+function getLatencyHistory() {
+  const fiveMinutesAgo = Date.now() - (5 * 60 * 1000);
+
+  return db.query(
+    `SELECT
+        (created_at / 5000) * 5000 AS time,
+        AVG(latency) AS latency
+     FROM metrics
+     WHERE created_at > ?
+     GROUP BY time
+     ORDER BY time ASC`,
+    [fiveMinutesAgo]
+  );
+}
 module.exports = {
   saveMetric,
   getMetricHistory,
+  getTrafficHistory,
+  getLatencyHistory,
 };

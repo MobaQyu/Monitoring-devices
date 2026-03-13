@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import Devices from "./pages/Devices";
 import Users from "./pages/Users";
 import Login from "./pages/Login";
+import NetworkMap from "./pages/NetworkMap";
 import Roles from "./pages/settings/Roles";
 import Regions from "./pages/settings/Regions";
 import DeviceTypes from "./pages/settings/DeviceTypes";
@@ -20,6 +21,7 @@ export default function App() {
 
           <Route index element={<Dashboard />} />
           <Route path="devices" element={<Devices />} />
+          <Route path="/network-map" element={<NetworkMap />} />
 
           <Route
             path="users"
@@ -29,6 +31,8 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+
+
 
           <Route
             path="settings/roles"

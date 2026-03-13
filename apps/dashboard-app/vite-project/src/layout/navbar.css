@@ -115,13 +115,15 @@
 .dropdown {
   position: absolute;
   right: 0;
-  top: 52px;
-  width: 260px;
+  top: 45px;
+  width: 320px;
+
+  max-height: 420px;   /* 🔥 penting */
+  overflow-y: auto;    /* 🔥 penting */
+
   background: var(--bg-surface);
-  border: 1px solid var(--border-default);
-  border-radius: 12px;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
-  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
   z-index: 1000;
 }
 
@@ -204,4 +206,13 @@
   font-size: 12px;
   cursor: pointer;
   color: #888;
+}
+.bell-critical {
+  animation: bellPulse 1.5s infinite;
+}
+
+@keyframes bellPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); color: #ef4444; }
+  100% { transform: scale(1); }
 }

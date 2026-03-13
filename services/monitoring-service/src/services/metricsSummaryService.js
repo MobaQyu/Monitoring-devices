@@ -2,7 +2,7 @@ const db = require("../../db");
 
 async function generateHourlySummary() {
   const now = Date.now();
-  const oneHour = 5 * 60 * 1000;
+  const oneHour = 60 * 60 * 1000;
 
   // Bulatkan ke awal jam sekarang
   const currentHour = Math.floor(now / oneHour) * oneHour;
@@ -11,7 +11,6 @@ async function generateHourlySummary() {
   const previousHour = currentHour - oneHour;
 
   try {
-    console.log("⏳ Generating summary for hour:", new Date(previousHour));
 
     // Ambil data raw dalam range 1 jam penuh
     const rows = await db.query(
@@ -32,7 +31,6 @@ async function generateHourlySummary() {
     );
 
     if (!rows || rows.length === 0) {
-      console.log("⚠ No raw data found for this hour.");
       return;
     }
 
@@ -49,7 +47,6 @@ async function generateHourlySummary() {
       );
 
       if (existing.length > 0) {
-        console.log(`⏭ Summary already exists for device ${r.device_id}`);
         continue;
       }
 
@@ -83,6 +80,8 @@ async function generateHourlySummary() {
     }
 
     console.log("✅ Hourly summary generated successfully.");
+    console.log("Running summary at:", new Date(now));
+console.log("Processing hour:", new Date(previousHour));
 
   } catch (err) {
     console.error("❌ Hourly summary error:", err.message);

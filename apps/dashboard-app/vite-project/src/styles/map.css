@@ -32,22 +32,23 @@
 /* OFFLINE MARKER PULSE */
 /* ============================= */
 
-.pulse-offline {
-  animation: pulseRed 1.5s infinite;
+.pulse-critical {
+ animation: pulseRed 1s ease-in-out infinite;;
+  will-change: transform;
 }
 
 @keyframes pulseRed {
   0% {
     transform: scale(1);
-    filter: drop-shadow(0 0 0 rgba(255, 0, 0, 0.7));
+    filter: drop-shadow(0 0 0 rgba(255, 0, 0, 0.6));
   }
   50% {
     transform: scale(1.15);
-    filter: drop-shadow(0 0 14px var(--pulse-red));
+    filter: drop-shadow(0 0 12px var(--pulse-red));
   }
   100% {
     transform: scale(1);
-    filter: drop-shadow(0 0 0 rgba(255, 0, 0, 0.7));
+    filter: drop-shadow(0 0 0 rgba(255, 0, 0, 0.6));
   }
 }
 
@@ -225,4 +226,52 @@
 
 .popup-detail-btn:hover {
   opacity: 0.9;
+}
+/* ============================= */
+/* FLOATING SUMMARY */
+/* ============================= */
+
+.floating-summary {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+
+  background: var(--map-toolbar-bg);
+  backdrop-filter: blur(10px);
+
+  padding: 14px 18px;
+  border-radius: 14px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  z-index: 1000;
+}
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.summary-item.green {
+  color: #22c55e;
+}
+
+.summary-item.orange {
+  color: #facc15;
+}
+
+.summary-item.red {
+  color: #ef4444;
+}
+
+.summary-item.critical {
+  color: #ef4444;
+  font-weight: 600;
 }

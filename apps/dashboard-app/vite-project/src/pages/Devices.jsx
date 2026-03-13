@@ -139,7 +139,7 @@ export default function Devices() {
   };
 
   const runtimeUpdateHandler = (data) => {
-    console.log("RUNTIME UPDATE RECEIVED:", data);
+    
 
     setDevicesRaw((prev) =>
       prev.map((d) =>

@@ -35,14 +35,17 @@ export default function LatencyChart({ data }) {
           formatter={(v) => `${v} ms`}
           labelFormatter={(l) => new Date(l).toLocaleString()}
         />
-        <Line
-          type="monotone"
-          dataKey="latency"
-          stroke="#f97316"
-          strokeWidth={2}   // 🔥 lebih tipis
-          dot={false}
-          isAnimationActive={false}
-        />
+      <Line
+  type="natural"
+  dataKey="latency"
+  stroke="#f97316"
+  strokeWidth={2}
+  dot={false}
+  connectNulls
+  isAnimationActive={false}
+  strokeLinejoin="round"
+  strokeLinecap="round"
+/>
       </LineChart>
     </ResponsiveContainer>
   );
