@@ -149,13 +149,13 @@ export default function DeviceDetail({ device, onClose }) {
 
         <div className="device-actions">
           <button
-            className="secondary"
+            className="primary"
             onClick={() => {
               onClose();
-              navigate(`/devices?edit=${live.id}`);
+              navigate(`/device/${live.id}`);
             }}
           >
-            Edit
+            View Details
           </button>
           <button onClick={onClose}>✕</button>
         </div>

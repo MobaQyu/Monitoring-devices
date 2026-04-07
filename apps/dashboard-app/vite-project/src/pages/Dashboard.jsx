@@ -261,7 +261,7 @@ useEffect(() => {
   return (
     <div className="dashboard">
 
-      {/* REGION FILTER */}
+      {/* REGION FILTER
 
       <div className="dashboard-filter">
 
@@ -280,7 +280,7 @@ useEffect(() => {
 
         </select>
 
-      </div>
+      </div> */}
 
       {/* SUMMARY */}
 

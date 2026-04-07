@@ -10,6 +10,7 @@ import NetworkMap from "./pages/NetworkMap";
 import Roles from "./pages/settings/Roles";
 import Regions from "./pages/settings/Regions";
 import DeviceTypes from "./pages/settings/DeviceTypes";
+import DeviceDetailPage from "./pages/DeviceDetailPage";
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
           <Route index element={<Dashboard />} />
           <Route path="devices" element={<Devices />} />
           <Route path="/network-map" element={<NetworkMap />} />
+          <Route path="device/:id" element={<DeviceDetailPage />} />
 
           <Route
             path="users"
